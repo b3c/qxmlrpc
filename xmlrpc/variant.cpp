@@ -164,6 +164,9 @@ Variant::Variant( const QDomElement& node )
             if ( tagName == "struct" ) {
                 (*this) = decodeStruct( data );
             } else 
+            if ( tagName == "structH" ) {
+                (*this) = decodeStructH( data );
+            } else 
             if ( tagName == "array" ) {
                 (*this) = decodeArray( data );
             } else {
@@ -232,6 +235,41 @@ Variant Variant::decodeStruct( const QDomElement& node )
     return Variant(res);
 }
 
+Variant Variant::decodeStructH( const QDomElement& node )
+{
+    Q_ASSERT( node.tagName() == "structH" );
+    
+    QHash<QString, Variant> res;
+    QDomElement member = node.firstChild().toElement();
+    while ( !member.isNull() ) {
+        
+        Q_ASSERT( member.tagName() == "member" );
+        
+        QString name;
+        Variant value;
+        QDomElement child = member.firstChild().toElement();
+        while ( !child.isNull() ) {
+            if ( child.tagName() == "name" ) {
+                name = child.text();
+            }
+            if ( child.tagName() == "value" )
+                value = Variant( child );
+            
+            child = child.nextSibling().toElement();
+        }
+        
+        if ( !name.isNull() && value.isValid() ) {
+            res[name] = value;
+        }
+        
+        member = member.nextSibling().toElement();
+        
+    }
+    
+    return Variant(res);
+}
+    
+    
 Variant Variant::decodeArray( const QDomElement& node )
 {
     Q_ASSERT( node.tagName() == "array" );

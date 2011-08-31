@@ -58,6 +58,9 @@ private:
     /*! decode the <struct> dom node */
     static Variant decodeStruct( const QDomElement& node );
 
+    /*! decode the <structH> dom node */
+    static Variant decodeStructH( const QDomElement& node );
+
     /*! decode the <array> dom node */
     static Variant decodeArray( const QDomElement& node );
 
