@@ -108,6 +108,21 @@ Variant::Variant ( const QMap<QString, Variant> & mapVal  )
 
     setValue(qVal);
 }
+    
+/** Constructs a new variant with a hash value, val. */
+Variant::Variant ( const QHash<QString, Variant> & hashVal  )
+: QVariant()
+{
+    QHash<QString, QVariant> qVal;
+    
+    QHashIterator<QString, Variant> i(hashVal);
+    while (i.hasNext()) {
+        i.next();
+        qVal.insert( i.key(), i.value() );
+    }
+    
+    setValue(qVal);
+}
 
 
 /**
