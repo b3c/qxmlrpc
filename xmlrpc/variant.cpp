@@ -332,6 +332,25 @@ QDomElement Variant::toDomElement( QDomDocument& doc ) const
             }
             break;
         }
+    case Hash:
+        {
+            data = doc.createElement("struct");
+            QHash<QString,QVariant> hash = toHash();
+            QHash<QString,QVariant>::Iterator it;
+            for ( it = hash.begin(); it!=hash.end(); ++it ) {
+                QDomElement member = doc.createElement("member");
+                data.appendChild( member );
+                
+                QDomElement name = doc.createElement("name");
+                name.appendChild( doc.createTextNode( it.key() ) );
+                QDomElement value = Variant(it.value()).toDomElement(doc);
+                
+                member.appendChild( name );
+                member.appendChild( value );
+            }
+            break;
+        }
+
     default: 
         {
             // this should never be called
