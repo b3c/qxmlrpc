@@ -334,7 +334,7 @@ QDomElement Variant::toDomElement( QDomDocument& doc ) const
         }
     case Hash:
         {
-            data = doc.createElement("struct");
+            data = doc.createElement("structH");
             QHash<QString,QVariant> hash = toHash();
             QHash<QString,QVariant>::Iterator it;
             for ( it = hash.begin(); it!=hash.end(); ++it ) {
@@ -442,6 +442,21 @@ QString Variant::pprint( int column )
                 if ( it.hasNext() )
                     val += ","; 
 
+                items << it.key()+"="+val+" ";
+            }
+            items << "}";
+            break;
+        }
+    case Hash:
+        {
+            items << "{ ";
+            QHashIterator<QString,QVariant> it(toHash());
+            while( it.hasNext() ) {
+                it.next();
+                QString val = Variant(it.value()).pprint(column+2);
+                if ( it.hasNext() )
+                    val += ","; 
+                
                 items << it.key()+"="+val+" ";
             }
             items << "}";

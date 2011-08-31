@@ -44,6 +44,7 @@ namespace xmlrpc {
                 typeNames[ QVariant::DateTime ] = "dateTime.iso8601";
                 typeNames[ QVariant::List ] = "array";
                 typeNames[ QVariant::Map ] = "struct";
+                typeNames[ QVariant::Hash ] = "structH";
             }
 
             items << typeNames.value(returnType);
