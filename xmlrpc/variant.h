@@ -39,7 +39,6 @@ public:
     Variant ( const QDateTime & val );
     Variant ( const QList<Variant> & val );
     Variant ( const QMap<QString, Variant> & val );
-    Variant ( const QHash<QString, Variant> & val );
 
     //! this variable is casted to string XML-RPC type
     Variant ( const QChar & c );

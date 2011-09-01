@@ -109,22 +109,6 @@ Variant::Variant ( const QMap<QString, Variant> & mapVal  )
     setValue(qVal);
 }
     
-/** Constructs a new variant with a hash value, val. */
-Variant::Variant ( const QHash<QString, Variant> & hashVal  )
-: QVariant()
-{
-    QHash<QString, QVariant> qVal;
-    
-    QHashIterator<QString, Variant> i(hashVal);
-    while (i.hasNext()) {
-        i.next();
-        qVal.insert( i.key(), i.value() );
-    }
-    
-    setValue(qVal);
-}
-
-
 /**
  * Constructs a new variant from XmlRPC xml element node.
  * note name must be "value"
@@ -163,9 +147,6 @@ Variant::Variant( const QDomElement& node )
             } else
             if ( tagName == "struct" ) {
                 (*this) = decodeStruct( data );
-            } else 
-            if ( tagName == "structH" ) {
-                (*this) = decodeStructH( data );
             } else 
             if ( tagName == "array" ) {
                 (*this) = decodeArray( data );
@@ -234,41 +215,6 @@ Variant Variant::decodeStruct( const QDomElement& node )
 
     return Variant(res);
 }
-
-Variant Variant::decodeStructH( const QDomElement& node )
-{
-    Q_ASSERT( node.tagName() == "structH" );
-    
-    QHash<QString, Variant> res;
-    QDomElement member = node.firstChild().toElement();
-    while ( !member.isNull() ) {
-        
-        Q_ASSERT( member.tagName() == "member" );
-        
-        QString name;
-        Variant value;
-        QDomElement child = member.firstChild().toElement();
-        while ( !child.isNull() ) {
-            if ( child.tagName() == "name" ) {
-                name = child.text();
-            }
-            if ( child.tagName() == "value" )
-                value = Variant( child );
-            
-            child = child.nextSibling().toElement();
-        }
-        
-        if ( !name.isNull() && value.isValid() ) {
-            res[name] = value;
-        }
-        
-        member = member.nextSibling().toElement();
-        
-    }
-    
-    return Variant(res);
-}
-    
     
 Variant Variant::decodeArray( const QDomElement& node )
 {
@@ -365,24 +311,6 @@ QDomElement Variant::toDomElement( QDomDocument& doc ) const
                 name.appendChild( doc.createTextNode( it.key() ) );
                 QDomElement value = Variant(it.value()).toDomElement(doc);
     
-                member.appendChild( name );
-                member.appendChild( value );
-            }
-            break;
-        }
-    case Hash:
-        {
-            data = doc.createElement("structH");
-            QHash<QString,QVariant> hash = toHash();
-            QHash<QString,QVariant>::Iterator it;
-            for ( it = hash.begin(); it!=hash.end(); ++it ) {
-                QDomElement member = doc.createElement("member");
-                data.appendChild( member );
-                
-                QDomElement name = doc.createElement("name");
-                name.appendChild( doc.createTextNode( it.key() ) );
-                QDomElement value = Variant(it.value()).toDomElement(doc);
-                
                 member.appendChild( name );
                 member.appendChild( value );
             }
@@ -485,21 +413,7 @@ QString Variant::pprint( int column )
             items << "}";
             break;
         }
-    case Hash:
-        {
-            items << "{ ";
-            QHashIterator<QString,QVariant> it(toHash());
-            while( it.hasNext() ) {
-                it.next();
-                QString val = Variant(it.value()).pprint(column+2);
-                if ( it.hasNext() )
-                    val += ","; 
-                
-                items << it.key()+"="+val+" ";
-            }
-            items << "}";
-            break;
-        }
+
     default:
         items << "unexpected element " + toString(); 
     };
