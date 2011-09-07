@@ -307,7 +307,7 @@ void Server::processRequest( QByteArray request, QTcpSocket *socket )
         d->expectedReturnTypes[ requestId ] = returnType;
     }
 
-    emit incomingRequest( requestId, methodName, parameters );
+    Q_EMIT incomingRequest( requestId, methodName, parameters );
 }
 
 /**

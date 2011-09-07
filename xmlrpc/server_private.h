@@ -20,7 +20,7 @@ class IncomingConnection : public QObject
 Q_OBJECT
 public:
     IncomingConnection(Server *parent, QTcpSocket *socket );
-public slots:
+public Q_SLOTS:
     void readData();
 private:
     Server *server;

@@ -65,7 +65,7 @@ public:
     int request( QString methodName, Variant param1, Variant param2, Variant param3 );
     int request( QString methodName, Variant param1, Variant param2, Variant param3, Variant param4 );
 
-signals:
+Q_SIGNALS:
     //! request requestId is done with return value res
     void done( int requestId, QVariant res );
     //! request requestId is failed with fault code faultCode and fault description faultString
@@ -77,7 +77,7 @@ signals:
     //! proxyAuthenticationRequired signal passed from QHttp
     void proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *);
 
-protected slots:
+protected Q_SLOTS:
     void requestFinished(int id, bool error);
 
 private:

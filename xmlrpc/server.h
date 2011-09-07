@@ -38,15 +38,15 @@ public:
     void registerMethod( QString methodName, QVariant::Type returnType, 
                          QVariant::Type parameter1Type, QVariant::Type parameter2Type, QVariant::Type parameter3Type, QVariant::Type parameter4Type );
 
-signals:
+Q_SIGNALS:
     void incomingRequest( int requestId, QString methodName, QList<xmlrpc::Variant> parameters );
 
-public slots:
+public Q_SLOTS:
     void sendReturnValue( int requestId, const xmlrpc::Variant& value );
     void sendFault( int requestId, int faultCode, QString faultMessage );
 
 
-protected slots:
+protected Q_SLOTS:
     void newConnection();
     void processRequest( QByteArray data, QTcpSocket *socket );
 

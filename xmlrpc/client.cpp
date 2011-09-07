@@ -278,7 +278,7 @@ void Client::requestFinished(int id, bool error)
         delete buffer;
 
 
-        emit failed(id, -32300, d->http->errorString() );
+        Q_EMIT failed(id, -32300, d->http->errorString() );
         return;
     }
 
@@ -296,12 +296,12 @@ void Client::requestFinished(int id, bool error)
 
             if ( response.isFault() ) {
                 qDebug() << "request failed:" << response.faultCode() << response.faultString();
-                emit failed(id, response.faultCode(), response.faultString() );
+                Q_EMIT failed(id, response.faultCode(), response.faultString() );
             } else {
 #ifdef XMLRPC_DEBUG
                 qDebug() << response.returnValue().pprint();
 #endif
-                emit done( id, response.returnValue() );
+                Q_EMIT done( id, response.returnValue() );
             }
 
         } else {
@@ -310,7 +310,7 @@ void Client::requestFinished(int id, bool error)
             qDebug() << "incorrect xmlrpc response:" << errorMessage;
             qDebug() << QString(buf);
 #endif
-            emit failed(id, -32600, "Server error: Invalid xml-rpc. \nNot conforming to spec.");
+            Q_EMIT failed(id, -32600, "Server error: Invalid xml-rpc. \nNot conforming to spec.");
         }
         delete buffer;
 
