@@ -164,7 +164,7 @@ void Client::setUserAgent( const QString & userAgent )
  * but to avoid such kind of bugs, the parameters order in
  * overloaded methods was changed.
  */
-int Client::request( QList<Variant> params, QString methodName )
+int Client::request( QList<Variant> params, QString methodName, QMap<QString, QString> *headerMap )
 {
     QBuffer *outBuffer = new QBuffer;
 
@@ -176,6 +176,13 @@ int Client::request( QList<Variant> params, QString methodName )
     header.setValue( "User-Agent", d->userAgent );
     header.setValue( "Connection", "Keep-Alive");
 
+    if (headerMap != NULL){
+        QMapIterator<QString, QString> i(*headerMap);
+        while (i.hasNext()) {
+            i.next();
+            header.setValue(i.key(), i.value());
+        }
+    }
 
     if ( !d->userName.isEmpty() ) {
         QByteArray authData = QString(d->userName + ":" + d->password).toUtf8();
