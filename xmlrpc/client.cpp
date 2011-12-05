@@ -166,39 +166,6 @@ void Client::setUserAgent( const QString & userAgent )
  */
 int Client::request( QList<Variant> params, QString methodName, QMap<QString, QVariant> *headerMap )
 {
-	QMap<QString, QString> m;
-	if(headerMap) {
-        QMap<QString, QVariant>::Iterator it(headerMap->begin());
-        while(it != headerMap->end()) {
-            m.insert(it.key(), it.value().toString());
-            ++it;
-        }
-	}
-	
-	return request(params, methodName, &m);
-}
-/**
- * Call method methodName on server side with parameters list
- * params. Returns id of request, used in done() and failed()
- * signals.
- * 
- * The parameters order is changed in overloaded methods to
- * avoid situation when the only parameter is the list.
- * \code
- * QList<xmlrpc::Variant> parameter;
- * ...
- * int requestId = client->request( methodName, parameter );
- * \endcode
- * This leads to this method be called, with parameter treated
- * as parameters list. It's possible to fix this with next code:
- * \code
- * client->request( methodName, xmlrpc::Variant(parameter) );
- * \endcode
- * but to avoid such kind of bugs, the parameters order in
- * overloaded methods was changed.
- */
-int Client::request( QList<Variant> params, QString methodName, QMap<QString, QString> *headerMap )
-{
     QBuffer *outBuffer = new QBuffer;
 
     QByteArray data = Request(methodName,params).composeRequest();
@@ -210,10 +177,10 @@ int Client::request( QList<Variant> params, QString methodName, QMap<QString, QS
     header.setValue( "Connection", "Keep-Alive");
 
     if (headerMap != NULL){
-        QMapIterator<QString, QString> i(*headerMap);
+        QMapIterator<QString, QVariant> i(*headerMap);
         while (i.hasNext()) {
             i.next();
-            header.setValue(i.key(), i.value());
+            header.setValue(i.key(), i.value().toString());
         }
     }
 

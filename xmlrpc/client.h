@@ -56,7 +56,6 @@ public:
 
 	virtual ~Client();
 
-    int request( QList<Variant> params, QString methodName, QMap<QString, QString> *headerMap = NULL);
     int request( QList<Variant> params, QString methodName, QMap<QString, QVariant> *headerMap = NULL);
     
     /* overloaded methods */
