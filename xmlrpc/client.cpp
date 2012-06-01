@@ -9,7 +9,6 @@
 #include <qbuffer.h>
 #include <QtNetwork>
 #include <QAuthenticator>
-
 //#define XMLRPC_DEBUG
 
 namespace  xmlrpc {
@@ -94,6 +93,10 @@ void Client::setHost( const QString & hostName, int connectionMode, quint16 port
     d->port = port;
     d->path = path;
     d->http->setHost( hostName, (QHttp::ConnectionMode)connectionMode, port );
+    if(connectionMode == QHttp::ConnectionModeHttps) {
+        QSslSocket *s = new QSslSocket();
+        d->http->setSocket(s);
+    }
 }
 
 /**
