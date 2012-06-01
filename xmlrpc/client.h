@@ -44,9 +44,9 @@ class Client : public QObject {
 Q_OBJECT
 public:
 	Client(QObject * parent = 0);
-	Client(const QString & hostname, quint16 port = 80, QObject * parent = 0L);
+	Client(const QString & hostname, int connectionMode = 0, quint16 port = 80, QObject * parent = 0L);
 
-    void setHost ( const QString & hostname, quint16 port = 80, QString path="/" );
+    void setHost ( const QString & hostname, int connectionMode = 0, quint16 port = 80, QString path="/" );
     void setProxy ( const QString & host, int port, 
                     const QString & username = QString(), const QString & password = QString() );
     void setSocket ( QTcpSocket * socket );

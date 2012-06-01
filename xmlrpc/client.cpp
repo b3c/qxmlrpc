@@ -59,11 +59,11 @@ Client::Client(QObject * parent)
  * Constructs a XmlRPC client for communication with XmlRPC
  * server running on host \a hostName \a port.
  */
-Client::Client(const QString & hostName, quint16 port, QObject * parent)
+Client::Client(const QString & hostName, int connectionMode, quint16 port, QObject * parent)
 : QObject( parent )
 {
     d = new Private;
-    setHost( hostName, port );
+    setHost( hostName, connectionMode, port );
 
     //important: dissconnect all connection from http in destructor,
     //otherwise crashes are possible when other parts of Client::Private
@@ -88,12 +88,12 @@ Client::~Client()
  * Sets the XML-RPC server that is used for requests to hostName
  * on port \a port and path \path.
  */
-void Client::setHost( const QString & hostName, quint16 port, QString path )
+void Client::setHost( const QString & hostName, int connectionMode, quint16 port, QString path )
 {
     d->hostName = hostName;
     d->port = port;
     d->path = path;
-    d->http->setHost( hostName, port );
+    d->http->setHost( hostName, (QHttp::ConnectionMode)connectionMode, port );
 }
 
 /**
