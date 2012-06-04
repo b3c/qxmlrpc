@@ -79,6 +79,7 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     void requestFinished(int id, bool error);
+    void showSslErrors(const QList<QSslError> & errors);
 
 private:
 	class Private;

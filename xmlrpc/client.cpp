@@ -46,6 +46,7 @@ Client::Client(QObject * parent)
     d->http = new QHttp(this);
 
     connect( d->http, SIGNAL(requestFinished(int,bool)), SLOT(requestFinished(int,bool)) );
+    connect( d->http, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(showSslErrors(QList<QSslError>)));
 
     connect( d->http, SIGNAL(proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *)),
              this, SIGNAL(proxyAuthenticationRequired(const QNetworkProxy &, QAuthenticator *) ) );
@@ -82,6 +83,12 @@ Client::~Client()
     delete d;
 }
 
+void Client::showSslErrors(const QList<QSslError> & errors)
+{
+    d->http->ignoreSslErrors();
+    qDebug() << "SSL errors: " << errors;
+}
+
 
 /**
  * Sets the XML-RPC server that is used for requests to hostName
@@ -93,10 +100,11 @@ void Client::setHost( const QString & hostName, int connectionMode, quint16 port
     d->port = port;
     d->path = path;
     d->http->setHost( hostName, (QHttp::ConnectionMode)connectionMode, port );
-    if(connectionMode == QHttp::ConnectionModeHttps) {
+    
+    /*if(connectionMode == QHttp::ConnectionModeHttps) {
         QSslSocket *s = new QSslSocket();
         d->http->setSocket(s);
-    }
+    }*/
 }
 
 /**
